@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import LectorTarjeta.QR.GeneradorQR;
+import db.GenerarID;
+import db.InsertarEstudiante;
 
 public class Administrador extends Persona {
 
@@ -71,41 +73,31 @@ public class Administrador extends Persona {
      */
     public static void registrarEstudiante() {
 
-        String id       = Utility.ToolBox.getConsolaString("Ingrese el ID del estudiante: ");
         String nombre   = Utility.ToolBox.getConsolaString("Ingrese el nombre del estudiante: ");
         String carrera  = Utility.ToolBox.getConsolaString("Ingrese la carrera del estudiante: ");
         String semestre = Utility.ToolBox.getConsolaString("Ingrese el semestre del estudiante: ");
         String correo   = Utility.ToolBox.getConsolaString("Ingrese el correo del estudiante: ");
 
-        if (existeEstudiante(id)) {
-            System.out.println("Error: Ya existe un estudiante con ID: " + id);
-            return;
-        }
+        // if (existeEstudiante(nombre)) {
+        //     System.out.println("Error: Ya existe un estudiante con nombre: " + nombre);
+        //     return;
+        // }
+
+        GenerarID idGenerator = new GenerarID();
+
+        String id = String.valueOf(idGenerator.generarIdUnico());
 
         GeneradorQR.generarQR(id, correo, nombre);
 
-        Estudiante e = new Estudiante(id, nombre, carrera, semestre, correo);
-        listaEstudiantes.add(e);
+        InsertarEstudiante insertarEstudiante = new InsertarEstudiante();
+        insertarEstudiante.insertarEstudiante(id, nombre, carrera, semestre, correo);
 
         System.out.println("Estudiante registrado correctamente.");
         System.out.println("Nombre: "   + nombre);
+        System.out.println("ID: "       + id);
         System.out.println("Carrera: "  + carrera);
         System.out.println("Semestre: " + semestre);
         System.out.println("Correo: "   + correo);
-    }
-
-    /**
-     * Método para verificar si un estudiante ya existe por su ID.
-     * @param id El ID del estudiante a verificar.
-     * 
-     */
-    public static boolean existeEstudiante(String id) {
-        for (Estudiante estudiante : listaEstudiantes) {
-            if (estudiante.getId().equals(id)) {
-                return true;
-            }
-        }
-        return false;
     }
 
 }

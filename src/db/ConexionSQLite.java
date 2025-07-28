@@ -5,7 +5,20 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConexionSQLite {
-    private static final String URL = "jdbc:sqlite:src/bd/estudiantes.db";
+
+    public static void main(String[] args) {
+        // Prueba de conexión
+        Connection conn = conectar();
+        if (conn != null) {
+            try {
+                conn.close();
+                System.out.println("Conexión cerrada.");
+            } catch (SQLException e) {
+                System.out.println("Error al cerrar la conexión: " + e.getMessage());
+            }
+        }
+    }
+    private static final String URL = "jdbc:sqlite:estudiantes.db";
 
     /**
      * Establece una conexión a la base de datos SQLite.
