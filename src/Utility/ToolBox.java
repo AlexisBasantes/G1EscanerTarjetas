@@ -36,14 +36,17 @@ public class ToolBox {
             while (!scanner.hasNextInt()) {
                 System.out.println("Por favor, ingrese un número entero válido.");
                 scanner.next(); // Limpiar el buffer
+                System.out.print(mensaje);
             }
             numero = scanner.nextInt();
+            scanner.nextLine(); // Consumir el salto de línea pendiente
+            
             if (numero < valorMinimo || numero > valorMaximo) {
                 System.out.println("El número debe estar entre " + valorMinimo + " y " + valorMaximo + ".");
             }
         } while (numero < valorMinimo || numero > valorMaximo);
          
-        return scanner.nextInt();
+        return numero;
     }
 
     /**
@@ -55,16 +58,21 @@ public class ToolBox {
      */
     public static int getNumero(String mensaje, int minimo, int maximo) {
         int valor;
-        do{
+        do {
             System.out.print(mensaje);
-            String input = scanner.nextLine();  
-            try {
-                valor = Integer.parseInt(input.trim());
-                if (valor >= minimo && valor <= maximo) 
-                    return valor;
-            } catch (Exception e) {}
+            while (!scanner.hasNextInt()) {
+                System.out.println("Por favor, ingrese un número entero válido.");
+                scanner.next(); // Limpiar el buffer
+                System.out.print(mensaje);
+            }
+            valor = scanner.nextInt();
+            scanner.nextLine(); // Consumir el salto de línea pendiente
+            
+            if (valor >= minimo && valor <= maximo) {
+                return valor;
+            }
             System.out.print(":( ");
-        }while (true);
+        } while (true);
     }
 
     /**
