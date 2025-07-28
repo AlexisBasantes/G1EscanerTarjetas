@@ -1,4 +1,4 @@
-package LectorTarjeta;
+package Contratos;
 
 public interface ILectorRFID {
 

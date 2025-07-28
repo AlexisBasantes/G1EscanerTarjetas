@@ -1,31 +1,35 @@
 package LectorTarjeta;
 
-public class Estudiante {
+public class Estudiante extends Persona {
     private String id;
     private String nombre;
     private String carrera;
-    private String nivel;
-    private String codigoQR;
+    private String semestre;
+    private String correo;
 
-    public Estudiante(String id, String nombre, String carrera, String nivel, String codigoQR) {
+    /*
+     * Contructor de la clase Estudiante.
+     */
+    public Estudiante(String id, String nombre, String carrera, String semestre, String correo) {
+        super(nombre);
         this.id = id;
         this.nombre = nombre;
         this.carrera = carrera;
-        this.nivel = nivel;
-        this.codigoQR = codigoQR;
+        this.semestre = semestre;
+        this.correo = correo;
     }
 
     // Getters
     public String getId() { return id; }
     public String getNombre() { return nombre; }
     public String getCarrera() { return carrera; }
-    public String getNivel() { return nivel; }
-    public String getCodigoQR() { return codigoQR; }
+    public String getsemestre() { return semestre; }
+    public String getCorreo() { return correo; }
 
     // Setters
     public void setId(String id) { this.id = id; }
     public void setNombre(String nombre) { this.nombre = nombre; }
     public void setCarrera(String carrera) { this.carrera = carrera; }
-    public void setNivel(String nivel) { this.nivel = nivel; }
-    public void setCodigoQR(String codigoQR) { this.codigoQR = codigoQR; }
+    public void setsemestre(String semestre) { this.semestre = semestre; }
+    public void setCorreo(String correo) { this.correo = correo; }
 }
