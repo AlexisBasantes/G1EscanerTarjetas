@@ -1,10 +1,10 @@
 package LectorTarjeta;
 
-public class Persona {
+public class Persona{
     private String nombre;
     private String id;
 
-    public Persona(String nombre, String id) {
+    public Persona(String nombre) {
         this.nombre = nombre;
         this.id = id;
     }
