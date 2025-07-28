@@ -12,11 +12,11 @@ public class Estudiante extends Persona {
      */
     public Estudiante(String id, String nombre, String carrera, String semestre, String correo) {
         super(nombre);
-        this.id = id;
-        this.nombre = nombre;
-        this.carrera = carrera;
-        this.semestre = semestre;
-        this.correo = correo;
+        this.id         = id;
+        this.nombre     = nombre;
+        this.carrera    = carrera;
+        this.semestre   = semestre;
+        this.correo     = correo;
     }
 
     // Getters

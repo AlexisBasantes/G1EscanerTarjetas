@@ -13,8 +13,13 @@ public class ToolBox {
      */
     public static String getConsolaString(String mensaje) {
         scanner = new Scanner(System.in);
-        System.out.print(mensaje);
-        return scanner.nextLine();
+        System.out.println(mensaje);
+        String input = scanner.nextLine();
+        if (input.isEmpty()) {
+            System.out.println("Entrada vacía. Por favor, ingrese un valor.");
+            return getConsolaString(mensaje);
+        }
+        return input;
     }
     
     /**

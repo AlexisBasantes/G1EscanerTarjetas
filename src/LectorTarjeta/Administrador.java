@@ -1,8 +1,5 @@
 package LectorTarjeta;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import LectorTarjeta.QR.GeneradorQR;
 import db.GenerarID;
 import db.InsertarEstudiante;
@@ -24,16 +21,15 @@ public class Administrador extends Persona {
     }
 
     // Getters
-    public String getId() { return id; }
-    public String getNombre() { return nombre; }
-    public String getcorreo() { return correo; }
+    public String getId() { return      id; }
+    public String getNombre() { return  nombre; }
+    public String getcorreo() { return  correo; }
 
     // Setters
-    public void setId(String id) { this.id = id; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
-    public void setcorreo(String correo) { this.correo = correo; }
+    public void setId(String id) { this.id              = id; }
+    public void setNombre(String nombre) { this.nombre  = nombre; }
+    public void setcorreo(String correo) { this.correo  = correo; }
 
-    private static List<Estudiante> listaEstudiantes = new ArrayList<>();
 
     /**
      * Método para mostrar el menú del administrador.
@@ -44,7 +40,7 @@ public class Administrador extends Persona {
 
         Utility.ToolBox.loading(75);
         Utility.ToolBox.clearScreen();
-        System.out.println("\tBienvenido al menú del Administrador\n1. Registrar estudiante\n2. Buscar estudiante\n3. Actualizar estudiante\n4. Eliminar estudiante\n5. Salir");
+        System.out.print("\tBienvenido al menú del Administrador\n1. Registrar estudiante\n2. Buscar estudiante\n3. Actualizar estudiante\n4. Eliminar estudiante\n5. Salir\n");
         int opcionAdmin = Utility.ToolBox.getConsolaEnteroPositivo("Ingrese una opcion: ", 1, 5);
         switch (opcionAdmin) {
             case 1:
@@ -77,11 +73,6 @@ public class Administrador extends Persona {
         String carrera  = Utility.ToolBox.getConsolaString("Ingrese la carrera del estudiante: ");
         String semestre = Utility.ToolBox.getConsolaString("Ingrese el semestre del estudiante: ");
         String correo   = Utility.ToolBox.getConsolaString("Ingrese el correo del estudiante: ");
-
-        // if (existeEstudiante(nombre)) {
-        //     System.out.println("Error: Ya existe un estudiante con nombre: " + nombre);
-        //     return;
-        // }
 
         GenerarID idGenerator = new GenerarID();
 
