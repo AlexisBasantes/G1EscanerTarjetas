@@ -10,7 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import db.BuscarEstudiante;
 
-
 public class Administrador extends Persona {
 
     private String id;
@@ -36,7 +35,6 @@ public class Administrador extends Persona {
     public void setId(String id) { this.id              = id; }
     public void setNombre(String nombre) { this.nombre  = nombre; }
     public void setcorreo(String correo) { this.correo  = correo; }
-
 
     /**
      * Método para mostrar el menú del administrador.
@@ -105,7 +103,6 @@ public class Administrador extends Persona {
         } catch (Exception e) {
             System.out.println("Ocurrió un error al registrar el estudiante: " + e.getMessage());
         } finally {
-            // Esto hará que después de registrar, vuelva al menú del administrador
             menuAdministrador();
         }
     }
@@ -128,70 +125,55 @@ public class Administrador extends Persona {
                     BuscarEstudiante.buscarPorNombre(nombre);
                     break;
                 case 3:
-                    volver = true; // Marcar para volver al menú principal
+                    volver = true;
                     break;
                 default:
                     System.out.println("Opción no válida.");
             }
             
             if (!volver) {
-                // Pausa solo si no vamos a volver al menú principal
                 Utility.ToolBox.getConsolaString("\nPresione Enter para continuar...");
             }
-        } while (!volver); // Salir del bucle cuando volver sea true
+        } while (!volver);
     }
 
-    
+    public static void actualizarEstudiante() {
+        String id = Utility.ToolBox.getConsolaString("Ingrese el ID del estudiante a actualizar: ");
 
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:estudiantes.db")) {
+            String sqlBuscar = "SELECT * FROM estudiantes WHERE id = ?";
+            PreparedStatement stmtBuscar = conn.prepareStatement(sqlBuscar);
+            stmtBuscar.setString(1, id);
+            ResultSet rs = stmtBuscar.executeQuery();
 
-    /**
-     * Método para registrar un nuevo estudiante.
-     */
-   
-public static void actualizarEstudiante() {
-    String id = Utility.ToolBox.getConsolaString("Ingrese el ID del estudiante a actualizar: ");
+            if (!rs.next()) {
+                System.out.println("No se encontró un estudiante con el ID proporcionado.");
+                return;
+            }
 
-    try (Connection conn = DriverManager.getConnection("jdbc:sqlite:estudiantes.db")) {
+            System.out.println("\nDatos actuales del estudiante:");
+            System.out.println("Nombre: " + rs.getString("nombre"));
+            System.out.println("Correo: " + rs.getString("correo"));
 
-        String sqlBuscar = "SELECT * FROM estudiantes WHERE id = ?";
-        PreparedStatement stmtBuscar = conn.prepareStatement(sqlBuscar);
-        stmtBuscar.setString(1, id);
-        ResultSet rs = stmtBuscar.executeQuery();
+            String nuevoNombre = Utility.ToolBox.getConsolaString("Ingrese el nuevo nombre: ");
+            String nuevoCorreo = Utility.ToolBox.getConsolaString("Ingrese el nuevo correo: ");
 
-        if (!rs.next()) {
-            System.out.println("No se encontró un estudiante con el ID proporcionado.");
-            return;
+            String sqlUpdate = "UPDATE estudiantes SET nombre = ?, correo = ? WHERE id = ?";
+            PreparedStatement stmtUpdate = conn.prepareStatement(sqlUpdate);
+            stmtUpdate.setString(1, nuevoNombre);
+            stmtUpdate.setString(2, nuevoCorreo);
+            stmtUpdate.setString(3, id);
+
+            int filasAfectadas = stmtUpdate.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("Estudiante actualizado correctamente.");
+            } else {
+                System.out.println("Error al actualizar el estudiante.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error en la base de datos: " + e.getMessage());
         }
-
-        // Mostrar datos actuales
-        System.out.println("\nDatos actuales del estudiante:");
-        System.out.println("Nombre: " + rs.getString("nombre"));
-        System.out.println("Correo: " + rs.getString("correo"));
-
-        // Pedir nuevos datos
-        String nuevoNombre = Utility.ToolBox.getConsolaString("Ingrese el nuevo nombre: ");
-        String nuevoCorreo = Utility.ToolBox.getConsolaString("Ingrese el nuevo correo: ");
-
-        // Actualizar datos en la base
-        String sqlUpdate = "UPDATE estudiantes SET nombre = ?, correo = ? WHERE id = ?";
-        PreparedStatement stmtUpdate = conn.prepareStatement(sqlUpdate);
-        stmtUpdate.setString(1, nuevoNombre);
-        stmtUpdate.setString(2, nuevoCorreo);
-        stmtUpdate.setString(3, id);
-
-        int filasAfectadas = stmtUpdate.executeUpdate();
-
-        if (filasAfectadas > 0) {
-            System.out.println("Estudiante actualizado correctamente.");
-        } else {
-            System.out.println("Error al actualizar el estudiante.");
-        }
-
-    } catch (SQLException e) {
-        System.out.println("Error en la base de datos: " + e.getMessage());
     }
-}
-
-
-
 }
