@@ -11,18 +11,22 @@ public class CrearTabla {
     }
     /**
      * Crea la tabla 'estudiantes' en la base de datos si no existe.
-     * La tabla contiene los campos id, nombre y  correo.
+     * La tabla contiene las columnas actualizadas:
+     * - ID, Admin: de tipo Integer.
+     * - Nombre, Correo, Semestre: de tipo Text.
+     * - Carrera: de tipo Integer.
      */
     public static void crearTablaEstudiantes() {
           try (Connection conn = DriverManager.getConnection("jdbc:sqlite:estudiantes.db");
              Statement stmt = conn.createStatement()) {
 
             String sql = "CREATE TABLE IF NOT EXISTS estudiantes ("
-                       + "id TEXT NOT NULL,"
-                       + "nombre TEXT NOT NULL,"
-                       + "correo TEXT NOT NULL,"
-                       + "carrera TEXT NOT NULL,"
-                       + "semestre TEXT NOT NULL"
+                       + "ID INTEGER NOT NULL,"
+                       + "Nombre TEXT NOT NULL,"
+                       + "Correo TEXT NOT NULL,"
+                       + "Carrera TEXT NOT NULL,"
+                       + "Semestre INTEGER NOT NULL,"
+                       + "Admin INTEGER NOT NULL"
                        + ");";
 
             stmt.execute(sql);

@@ -43,7 +43,7 @@ public class Administrador extends Persona {
         boolean salir = false;
         
         do {
-            Utility.ToolBox.loading(75);
+            Utility.ToolBox.loading(50);
             Utility.ToolBox.clearScreen();
             System.out.print("\tBienvenido al menú del Administrador\n1. Registrar estudiante\n2. Buscar estudiante\n3. Actualizar estudiante\n4. Eliminar estudiante\n5. Salir\n");
             int opcionAdmin = Utility.ToolBox.getConsolaEnteroPositivo("Ingrese una opcion: ", 1, 5);
@@ -62,35 +62,39 @@ public class Administrador extends Persona {
                     // eliminarEstudiante();
                     break;
                 case 5:
-                    salir = true;
+                    salir = false;
                     System.out.println("Saliendo del menú del Administrador...");
                     break;
                 default:
                     System.out.println("Opción no válida. Intente de nuevo.");
             }
-            
-            if (!salir && opcionAdmin != 5) {
-                Utility.ToolBox.getConsolaString("\nPresione Enter para continuar...");
-            }
-        } while (!salir);
+
+        } while (salir);
     }
 
     public static void registrarEstudiante() {
+        
+
         try {
-            String nombre   = Utility.ToolBox.getConsolaString("Ingrese el nombre del estudiante: ");
-            String carrera  = Utility.ToolBox.getConsolaString("Ingrese la carrera del estudiante: ");
-            String semestre = Utility.ToolBox.getConsolaString("Ingrese el semestre del estudiante: ");
-            String correo   = Utility.ToolBox.getConsolaString("Ingrese el correo del estudiante: ");
+            String nombre   = Utility.ToolBox.getConsolaString("Ingrese los apellidos y nombres del estudiante: ");
+            Utility.ToolBox.clearScreen();
+            String carrera  = Utility.ToolBox.getConsolaString("Ingrese la carrera del estudiante (Omitir palabra 'Ingenieria'. Ej: Software, Civil, etc): ");
+            Utility.ToolBox.clearScreen();
+            String semestre = Utility.ToolBox.getConsolaString("Ingrese el semestre del estudiante (1-10): ");
+            Utility.ToolBox.clearScreen();
+            String correo   = Utility.ToolBox.getConsolaString("Ingrese el correo institucional del estudiante: ");
+            Utility.ToolBox.clearScreen();
     
             GenerarID idGenerator = new GenerarID();
             String id = String.valueOf(idGenerator.generarIdUnico());
     
             GeneradorQR.generarQR(id, correo, nombre);
+
+            System.out.println("");
     
             InsertarEstudiante insertarEstudiante = new InsertarEstudiante();
-            insertarEstudiante.insertarEstudiante(id, nombre, carrera, semestre, correo);
+            insertarEstudiante.insertarEstudiante(id, nombre, correo, carrera, semestre);
     
-            System.out.println("Estudiante registrado correctamente.");
             System.out.println("Nombre: "   + nombre);
             System.out.println("ID: "       + id);
             System.out.println("Carrera: "  + carrera);
@@ -108,7 +112,7 @@ public class Administrador extends Persona {
     }
 
     public static void buscarEstudiante() {
-        boolean volver = false;
+        boolean volver = true;
         
         do {
             Utility.ToolBox.clearScreen();
@@ -125,16 +129,13 @@ public class Administrador extends Persona {
                     BuscarEstudiante.buscarPorNombre(nombre);
                     break;
                 case 3:
-                    volver = true;
+                    volver = false;
                     break;
                 default:
                     System.out.println("Opción no válida.");
             }
             
-            if (!volver) {
-                Utility.ToolBox.getConsolaString("\nPresione Enter para continuar...");
-            }
-        } while (!volver);
+        } while (volver);
     }
 
     public static void actualizarEstudiante() {

@@ -28,8 +28,19 @@ public class BuscarEstudiante {
                 System.out.println("Correo: " + rs.getString("correo"));
                 System.out.println("Carrera: " + rs.getString("carrera"));
                 System.out.println("Semestre: " + rs.getString("semestre"));
+                System.out.println("Volviendo al menu principal en 7 segundos...");
+                try {
+                    Thread.sleep(7000); 
+                } catch (InterruptedException e) {
+                     e.printStackTrace();
+                }
             } else {
-                System.out.println("No se encontró ningún estudiante con el ID: " + id);
+                System.out.println("No se encontró ningún estudiante con el ID: " + id + "\nVolviendo al menu principal en 5 segundos...");
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
             
         } catch (SQLException e) {
@@ -63,10 +74,24 @@ public class BuscarEstudiante {
                 System.out.println("Correo: " + rs.getString("correo"));
                 System.out.println("Carrera: " + rs.getString("carrera"));
                 System.out.println("Semestre: " + rs.getString("semestre"));
+                System.out.println("Volviendo al menu principal en 7 segundos...");
+                try {
+                    Thread.sleep(7000); 
+                } catch (InterruptedException e) {
+                     e.printStackTrace();
+                }
+                
+                
             }
             
             if (!encontrado) {
                 System.out.println("No se encontraron estudiantes con el nombre: " + nombre);
+                System.out.println("Volviendo al menu principal en 5 segundos...");
+                try {
+                    Thread.sleep(5000); 
+                } catch (InterruptedException e) {
+                     e.printStackTrace();
+                }
             }
             
         } catch (SQLException e) {
