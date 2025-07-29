@@ -1,0 +1,928 @@
+import LectorTarjeta.ControllerLector;
+
+public class App {
+    public static void main(String[] args) {
+        ControllerLector controller = new ControllerLector();
+        controller.start();
+    }
+}
+package Contratos;
+
+public interface ILectorRFID {
+
+}
+package db;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class BuscarEstudiante {
+    
+    /**
+     * Busca un estudiante por su ID y muestra su información.
+     * @param id El ID del estudiante a buscar.
+     */
+    public static void buscarPorId(String id) {
+        String sql = "SELECT * FROM estudiantes WHERE id = ?";
+        
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:estudiantes.db");
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, id);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                System.out.println("\nInformación del estudiante:");
+                System.out.println("ID: " + rs.getString("id"));
+                System.out.println("Nombre: " + rs.getString("nombre"));
+                System.out.println("Correo: " + rs.getString("correo"));
+                System.out.println("Carrera: " + rs.getString("carrera"));
+                System.out.println("Semestre: " + rs.getString("semestre"));
+                System.out.println("Volviendo al menu principal en 7 segundos...");
+                try {
+                    Thread.sleep(7000); 
+                } catch (InterruptedException e) {
+                     e.printStackTrace();
+                }
+            } else {
+                System.out.println("No se encontró ningún estudiante con el ID: " + id + "\nVolviendo al menu principal en 5 segundos...");
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error al buscar estudiante:");
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Busca estudiantes por nombre y muestra su información.
+     * @param nombre El nombre o parte del nombre a buscar.
+     */
+    public static void buscarPorNombre(String nombre) {
+        String sql = "SELECT * FROM estudiantes WHERE nombre LIKE ?";
+        
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:estudiantes.db");
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, "%" + nombre + "%");
+            ResultSet rs = pstmt.executeQuery();
+            
+            boolean encontrado = false;
+            while (rs.next()) {
+                if (!encontrado) {
+                    System.out.println("\nResultados de la búsqueda:");
+                    encontrado = true;
+                }
+                System.out.println("-------------------------");
+                System.out.println("ID: " + rs.getString("id"));
+                System.out.println("Nombre: " + rs.getString("nombre"));
+                System.out.println("Correo: " + rs.getString("correo"));
+                System.out.println("Carrera: " + rs.getString("carrera"));
+                System.out.println("Semestre: " + rs.getString("semestre"));
+                System.out.println("Volviendo al menu principal en 7 segundos...");
+                try {
+                    Thread.sleep(7000); 
+                } catch (InterruptedException e) {
+                     e.printStackTrace();
+                }
+                
+                
+            }
+            
+            if (!encontrado) {
+                System.out.println("No se encontraron estudiantes con el nombre: " + nombre);
+                System.out.println("Volviendo al menu principal en 5 segundos...");
+                try {
+                    Thread.sleep(5000); 
+                } catch (InterruptedException e) {
+                     e.printStackTrace();
+                }
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error al buscar estudiante:");
+            e.printStackTrace();
+        }
+    }
+}package db;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class ConexionSQLite {
+
+    public static void main(String[] args) {
+        // Prueba de conexión
+        Connection conn = conectar();
+        if (conn != null) {
+            try {
+                conn.close();
+                System.out.println("Conexión cerrada.");
+            } catch (SQLException e) {
+                System.out.println("Error al cerrar la conexión: " + e.getMessage());
+            }
+        }
+    }
+    private static final String URL = "jdbc:sqlite:estudiantes.db";
+
+    /**
+     * Establece una conexión a la base de datos SQLite.
+     *
+     * @return Connection objeto de conexión a la base de datos.
+     */
+    public static Connection conectar() {
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection(URL);
+            System.out.println("Conexión exitosa a SQLite.");
+        } catch (SQLException e) {
+            System.out.println("Error al conectar con SQLite: " + e.getMessage());
+        }
+        return conn;
+    }
+}
+package db;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+
+public class CrearTabla {
+
+    public static void main(String[] args) {
+        crearTablaEstudiantes();
+    }
+    /**
+     * Crea la tabla 'estudiantes' en la base de datos si no existe.
+     * La tabla contiene las columnas actualizadas:
+     * - ID, Admin: de tipo Integer.
+     * - Nombre, Correo, Semestre: de tipo Text.
+     * - Carrera: de tipo Integer.
+     */
+    public static void crearTablaEstudiantes() {
+          try (Connection conn = DriverManager.getConnection("jdbc:sqlite:estudiantes.db");
+             Statement stmt = conn.createStatement()) {
+
+            String sql = "CREATE TABLE IF NOT EXISTS estudiantes ("
+                       + "ID INTEGER NOT NULL,"
+                       + "Nombre TEXT NOT NULL,"
+                       + "Correo TEXT NOT NULL,"
+                       + "Carrera TEXT NOT NULL,"
+                       + "Semestre INTEGER NOT NULL,"
+                       + "Admin INTEGER NOT NULL"
+                       + ");";
+
+            stmt.execute(sql);
+            System.out.println("Tabla creada correctamente.");
+
+        } catch (Exception e) {
+            System.err.println("Error al crear la tabla:");
+            e.printStackTrace();
+        }
+    }
+}
+
+package db;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+
+public class eliminarEstudiante {
+
+    /**
+     * Elimina un estudiante de la base de datos por su ID.
+     *
+     * @param id El ID del estudiante a eliminar.
+     */
+    public static void eliminarPorId(String id) {
+        String sql = "DELETE FROM estudiantes WHERE id = ?";
+
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:estudiantes.db");
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, id);
+            int filasAfectadas = pstmt.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("Estudiante con ID " + id + " eliminado correctamente.");
+            } else {
+                System.out.println("No se encontró ningún estudiante con el ID: " + id);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error al eliminar el estudiante:");
+            e.printStackTrace();
+        }
+    }
+}
+package db;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+
+public class GenerarID {
+
+    /*
+     * Genera un ID único para un estudiante.
+     * El ID es un número entre 1000 y 9999.
+     */
+    public int generarIdUnico() {
+        int id;
+        do {
+            id = 1000 + (int)(Math.random() * 9000);
+        } while (idExiste(id));
+        return id;
+    }
+
+    /**
+     * Comprueba que el ID no exista en la base de datos.
+     * @param id El ID a verificar.
+     * @return true si el ID ya existe, false si es único.
+     */
+    private static boolean idExiste(int id) {
+        String sql = "SELECT id FROM estudiantes WHERE id = ?";
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:estudiantes.db");
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            return pstmt.executeQuery().next(); 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return true; 
+        }
+    }
+
+}
+package db;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+
+public class InsertarEstudiante {
+
+    /**
+     * Inserta un estudiante en la tabla 'estudiantes' con la estructura actualizada.
+     * 
+     * @param id        El ID del estudiante (se convertirá a Integer).
+     * @param nombre    El nombre del estudiante (primera letra en mayúscula).
+     * @param correo    El correo del estudiante.
+     * @param carrera   La carrera (se convertirá a Integer).
+     * @param semestre  El semestre del estudiante.
+     */
+    public void insertarEstudiante(String id, String nombre, String correo, String carrera, String semestre) {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:estudiantes.db")) {
+
+            // Se insertan las columnas (Admin se asigna por defecto)
+            String sql = "INSERT INTO estudiantes (ID, Nombre, Correo, Carrera, Semestre, Admin) VALUES (?, ?, ?, ?, ?, ?)";
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, Integer.parseInt(id));
+            pstmt.setString(2, nombre);
+            pstmt.setString(3, correo);
+            pstmt.setString(4, carrera);
+            pstmt.setInt(5, Integer.parseInt(semestre));
+            pstmt.setInt(6, 0);
+
+            pstmt.executeUpdate();
+            System.out.println("Estudiante insertado correctamente.");
+
+        } catch (Exception e) {
+            System.err.println("Error al insertar estudiante:");
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        // Ejemplo de uso
+        String id = "1";
+        String nombre = "Juan Perez";
+        String correo = "juan.perez@example.com";
+        String carrera = "Ingenieria en Sistemas";
+        String semestre = "3";
+
+        InsertarEstudiante insertarEstudiante = new InsertarEstudiante();
+        insertarEstudiante.insertarEstudiante(id, nombre, correo, carrera, semestre);
+    }
+}
+package LectorTarjeta;
+
+import LectorTarjeta.QR.GeneradorQR;
+import db.BuscarEstudiante;
+import db.GenerarID;
+import db.InsertarEstudiante;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class Administrador extends Persona {
+
+    private String id;
+    private String nombre;
+    private String correo;
+
+    /*
+     * Constructor de la clase Administrador.
+     */
+    public Administrador(String id, String nombre, String carrera, String nivel, String correo) {
+        super(nombre);
+        this.id     = id;
+        this.nombre = nombre;
+        this.correo = correo;
+    }
+
+    // Getters
+    public String getId() { return      id; }
+    public String getNombre() { return  nombre; }
+    public String getcorreo() { return  correo; }
+
+    // Setters
+    public void setId(String id) { this.id              = id; }
+    public void setNombre(String nombre) { this.nombre  = nombre; }
+    public void setcorreo(String correo) { this.correo  = correo; }
+
+    /**
+     * Método para mostrar el menú del administrador.
+     */
+    public static void menuAdministrador() {
+        boolean salir = true;
+
+        do {
+            Utility.ToolBox.loading(75);
+            Utility.ToolBox.clearScreen();
+            System.out.print("\tBienvenido al menú del Administrador\n1. Registrar estudiante\n2. Buscar estudiante\n3. Actualizar estudiante\n4. Eliminar estudiante\n5. Salir\n");
+            int opcionAdmin = Utility.ToolBox.getConsolaEnteroPositivo("Ingrese una opcion: ", 1, 5);
+
+            switch (opcionAdmin) {
+                case 1:
+                    registrarEstudiante();
+                    break;
+                case 2:
+                    buscarEstudiante();
+                    break;
+                case 3:
+                    actualizarEstudiante();
+                    break;
+                case 4:
+                    db.eliminarEstudiante.eliminarPorId(Utility.ToolBox.getConsolaString("Ingrese el ID del estudiante a eliminar: ")
+                    );
+                    break;
+                case 5:
+                    salir = false;
+                    System.out.println("Saliendo del menú del Administrador...");
+                    break;
+                default:
+                    System.out.println("Opción no válida. Intente de nuevo.");
+            }
+
+        } while (salir);
+    }
+
+    /**
+     * Método para registrar un nuevo estudiante.
+     */
+    public static void registrarEstudiante() {
+        try {
+            String nombre   = Utility.ToolBox.getConsolaString("Ingrese los apellidos y nombres del estudiante: ");
+            Utility.ToolBox.clearScreen();
+            String carrera  = Utility.ToolBox.getConsolaString("Ingrese la carrera del estudiante (Omitir la palabra 'Ingenieria'. Ej: Software, Civil, Ambiental, etc): ");
+            Utility.ToolBox.clearScreen();
+
+            String semestre = Utility.ToolBox.getConsolaString("Ingrese el semestre del estudiante (1-10): ");
+            Utility.ToolBox.clearScreen();
+
+            String correo   = Utility.ToolBox.getConsolaString("Ingrese el correo del estudiante: ");
+            Utility.ToolBox.clearScreen();
+
+            GenerarID idGenerator = new GenerarID();
+            String id = String.valueOf(idGenerator.generarIdUnico());
+
+            GeneradorQR.generarQR(id, correo, nombre);
+
+            InsertarEstudiante insertarEstudiante = new InsertarEstudiante();
+            insertarEstudiante.insertarEstudiante(id, nombre, correo, carrera, semestre);
+
+            System.out.println("Nombre: "   + nombre);
+            System.out.println("ID: "       + id);
+            System.out.println("Carrera: "  + carrera);
+            System.out.println("Semestre: " + semestre);
+            System.out.println("Correo: "   + correo);
+
+
+            System.out.println("\nEstudiante registrado correctamente. Volviendo al menú del administrador en 5 segundos...");
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+               e.printStackTrace();
+            }
+        } catch (Exception e) {
+            System.out.println("Ocurrió un error al registrar el estudiante: " + e.getMessage());
+        } finally {
+            menuAdministrador();
+        }
+    }
+
+    /**
+     * Método para buscar estudiantes por ID o nombre.
+     */
+    public static void buscarEstudiante() {
+        boolean volver = true;
+        do {
+            Utility.ToolBox.clearScreen();
+            System.out.print("\tBuscar Estudiante\n1. Buscar por ID\n2. Buscar por nombre\n3. Volver al menú principal\n");
+            int opcionBusqueda = Utility.ToolBox.getConsolaEnteroPositivo("Ingrese una opción: ", 1, 3);
+
+            switch (opcionBusqueda) {
+                case 1:
+                    String id = Utility.ToolBox.getConsolaString("Ingrese el ID del estudiante: ");
+                    BuscarEstudiante.buscarPorId(id);
+                    break;
+                case 2:
+                    String nombre = Utility.ToolBox.getConsolaString("Ingrese el nombre o parte del nombre: ");
+                    BuscarEstudiante.buscarPorNombre(nombre);
+                    break;
+                case 3:
+                    volver = false;
+                    break;
+                default:
+                    System.out.println("Opción no válida.");
+                    break;
+            }
+        } while (volver);
+    }
+
+    /**
+     * Método para actualizar los datos de un estudiante.
+     */
+    public static void actualizarEstudiante() {
+        String id = Utility.ToolBox.getConsolaString("Ingrese el ID del estudiante a actualizar: ");
+
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:estudiantes.db")) {
+            String sqlBuscar = "SELECT * FROM estudiantes WHERE id = ?";
+            PreparedStatement stmtBuscar = conn.prepareStatement(sqlBuscar);
+            stmtBuscar.setString(1, id);
+            ResultSet rs = stmtBuscar.executeQuery();
+
+            if (!rs.next()) {
+                System.out.println("No se encontró un estudiante con el ID proporcionado.");
+                return;
+            }
+
+            System.out.println("\nDatos actuales del estudiante:");
+            System.out.println("Nombre: " + rs.getString("nombre"));
+            System.out.println("Correo: " + rs.getString("correo"));
+
+            String nuevoNombre = Utility.ToolBox.getConsolaString("Ingrese el nuevo nombre: ");
+            String nuevoCorreo = Utility.ToolBox.getConsolaString("Ingrese el nuevo correo: ");
+
+            String sqlUpdate = "UPDATE estudiantes SET nombre = ?, correo = ? WHERE id = ?";
+            PreparedStatement stmtUpdate = conn.prepareStatement(sqlUpdate);
+            stmtUpdate.setString(1, nuevoNombre);
+            stmtUpdate.setString(2, nuevoCorreo);
+            stmtUpdate.setString(3, id);
+
+            int filasAfectadas = stmtUpdate.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("Estudiante actualizado correctamente.");
+            } else {
+                System.out.println("Error al actualizar el estudiante.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error en la base de datos: " + e.getMessage());
+        }
+    }
+}package LectorTarjeta;
+public class ControllerLector {
+
+    /**
+     * Método principal para iniciar el sistema de escaneo de tarjetas.
+     */
+    public void start() {
+
+        boolean salir = true;
+        do {
+            int opcionMenuPrincipal =   0;
+            System.out.println("Iniciando sistema");
+            Utility.ToolBox.loading(100);
+            Utility.ToolBox.clearScreen();
+
+            System.out.print("\tMenu Principal\n1. Escanear QR\n2. Menu de administrador\n3. Salir\n");
+            opcionMenuPrincipal = Utility.ToolBox.getConsolaEnteroPositivo("Ingrese una opcion: ", 1, 3);
+            switch (opcionMenuPrincipal) {
+                case 1:
+                
+                    // escanearQR();
+                    break;
+                case 2:
+                    Administrador.menuAdministrador();
+                    break;
+                case 3:
+                    System.out.println("Saliendo del sistema...");  
+                    salir = false;
+                    break;
+                default:
+                    System.out.println("Opción no válida.");
+            }
+        } while (salir);
+    }
+}
+package LectorTarjeta;
+
+public class Estudiante extends Persona {
+    private String id;
+    private String nombre;
+    private String carrera;
+    private String semestre;
+    private String correo;
+
+    /*
+     * Contructor de la clase Estudiante.
+     */
+    public Estudiante(String id, String nombre, String carrera, String semestre, String correo) {
+        super(nombre);
+        this.id         = id;
+        this.nombre     = nombre;
+        this.carrera    = carrera;
+        this.semestre   = semestre;
+        this.correo     = correo;
+    }
+
+    // Getters
+    public String getId() { return id; }
+    public String getNombre() { return nombre; }
+    public String getCarrera() { return carrera; }
+    public String getsemestre() { return semestre; }
+    public String getCorreo() { return correo; }
+
+    // Setters
+    public void setId(String id) { this.id = id; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+    public void setCarrera(String carrera) { this.carrera = carrera; }
+    public void setsemestre(String semestre) { this.semestre = semestre; }
+    public void setCorreo(String correo) { this.correo = correo; }
+}
+package LectorTarjeta;
+
+public class Persona{
+    private String nombre;
+    private String id;
+
+    /**
+     * Constructor de la clase Persona.
+     *
+     * @param nombre El nombre de la persona.
+     */
+    public Persona(String nombre) {
+        this.nombre = nombre;
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+}
+package LectorTarjeta.QR;
+
+import jakarta.mail.*;
+import jakarta.mail.internet.*;
+import jakarta.activation.*;
+import java.io.File;
+import java.util.Properties;
+
+public class EnviarCorreoConQR {
+
+    /**
+     * Envía un correo electrónico con un archivo QR adjunto.
+     *
+     * @param destinatario El correo electrónico del destinatario.
+     * @param rutaQR La ruta del archivo QR a adjuntar.
+     * @param nombreEstudiante El nombre del estudiante, usado en el asunto del correo.
+     */
+    public static void enviarCorreoConQR(String destinatario, String rutaQR, String         nombreEstudiante) {
+        String remitente = "generadorqr1017@gmail.com"; 
+        String clave     = "bbsbeuglacxidjce"; 
+        String asunto    = "Código QR para " + nombreEstudiante;
+        String mensaje   = "Hola " + nombreEstudiante + ",\n\nAdjunto encontrarás tu código QR para el sistema.";
+
+        // Configurar propiedades del servidor SMTP
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+
+        Session session = Session.getInstance(props, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(remitente, clave);
+            }
+        });
+
+        try {
+            // Crear mensaje de correo
+            Message msg = new MimeMessage(session);
+            msg.setFrom(new InternetAddress(remitente));
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destinatario));
+            msg.setSubject(asunto);
+
+            // Cuerpo del mensaje
+            MimeBodyPart cuerpo = new MimeBodyPart();
+            cuerpo.setText(mensaje);
+
+            // Adjuntar la imagen QR
+            MimeBodyPart adjuntoQR = new MimeBodyPart();
+            adjuntoQR.attachFile(new File(rutaQR)); // ruta del archivo QR generado
+
+            // Unir las partes
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(cuerpo);
+            multipart.addBodyPart(adjuntoQR);
+
+            msg.setContent(multipart);
+
+            // Enviar
+            Transport.send(msg);
+            System.out.println("Correo enviado con éxito a " + destinatario);
+
+        } catch (Exception e) {
+            System.out.println("Error al enviar correo:");
+            e.printStackTrace();
+        }
+    }
+}
+package LectorTarjeta.QR;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+public class GeneradorQR {
+
+    /**
+     * Genera un código QR a partir de un ID y lo guarda en un archivo.
+     *
+     * @param id El ID del estudiante o entidad para el cual se genera el QR.
+     * @param correo El correo electrónico del destinatario, usado para nombrar el archivo.
+     */
+    public static void generarQR(String id, String correo, String nombre) {
+        QRCodeWriter writer = new QRCodeWriter();
+        int width           = 300;
+        int height          = 300;
+
+        try {
+
+            BitMatrix matrix = writer.encode(id, BarcodeFormat.QR_CODE, width, height);
+            Path path = Paths.get("src/ImagenesQR", "QR_" + correo.split("@")[0] + ".png");
+            MatrixToImageWriter.writeToPath(matrix, "PNG", path);
+
+            EnviarCorreoConQR.enviarCorreoConQR(correo, "src/ImagenesQR"+ "/" + "QR_" + correo.split("@")[0] + ".png", nombre);
+
+            System.out.println("QR generado: " + correo + path.toAbsolutePath());
+
+        } catch (WriterException | IOException e) {
+            System.err.println("Error al generar QR: " + e.getMessage());
+        }
+    }
+}
+
+package LectorTarjeta;
+
+public class RegistroAcceso {
+
+}
+package RegistroAcceso;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class GestorAccesos {
+    private List<RegistroAcceso> accesos;
+
+    public GestorAccesos() {
+        accesos = new ArrayList<>();
+    }
+
+    public void registrarAcceso(String nombreEstudiante) {
+        RegistroAcceso nuevoAcceso = new RegistroAcceso(nombreEstudiante, java.time.LocalDateTime.now());
+        accesos.add(nuevoAcceso);
+        System.out.println("Acceso registrado: " + nuevoAcceso);
+    }
+
+    public List<RegistroAcceso> obtenerAccesos() {
+        return accesos;
+    }
+
+    public void mostrarAccesos() {
+        System.out.println("📋 Historial de accesos:");
+        for (RegistroAcceso acceso : accesos) {
+            System.out.println(acceso);
+        }
+    }
+}package RegistroAcceso;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+public class RegistroAcceso {
+    private String estudiante;
+    private LocalDateTime fechaHora;
+
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    public RegistroAcceso(String estudiante, LocalDateTime fechaHora) {
+        this.estudiante = estudiante;
+        this.fechaHora = fechaHora != null ? fechaHora : LocalDateTime.now();
+    }
+
+    public String getEstudiante() {
+        return estudiante;
+    }
+
+    public void setEstudiante(String estudiante) {
+        if (estudiante != null && !estudiante.trim().isEmpty()) {
+            this.estudiante = estudiante;
+        }
+    }
+
+    public LocalDateTime getFechaHora() {
+        return fechaHora;
+    }
+
+    public void setFechaHora(LocalDateTime fechaHora) {
+        if (fechaHora != null) {
+            this.fechaHora = fechaHora;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "👤 Estudiante: " + estudiante + " |  FechaHora: " + FORMATTER.format(fechaHora);
+    }
+}package Utility;
+
+import java.io.IOException;
+import java.util.Scanner;
+
+public class ToolBox {
+    
+    static Scanner scanner = new Scanner(System.in);
+
+    /**
+     * Muestra un mensaje en la consola y espera a que el usuario presione Enter.
+     * @param mensaje El mensaje a mostrar.
+     */
+    public static String getConsolaString(String mensaje) {
+        scanner = new Scanner(System.in);
+        System.out.println(mensaje);
+        String input = scanner.nextLine();
+        if (input.isEmpty()) {
+            System.out.println("Entrada vacía. Por favor, ingrese un valor.");
+            return getConsolaString(mensaje);
+        }
+        return input;
+    }
+    
+    /**
+     * Muestra un mensaje en la consola y espera a que el usuario ingrese un número entero positivo dentro de un rango.
+     * @param mensaje El mensaje a mostrar.
+     * @param valorMinimo El valor mínimo permitido (inclusive).
+     * @param valorMaximo El valor máximo permitido (inclusive).
+     * @return Un número entero positivo dentro del rango especificado.
+     */
+    public static int getConsolaEnteroPositivo(String mensaje, Integer valorMinimo, Integer valorMaximo) {
+        int numero;
+        do {
+            System.out.print(mensaje);
+            while (!scanner.hasNextInt()) {
+                System.out.println("Por favor, ingrese un número entero válido.");
+                scanner.next(); // Limpiar el buffer
+                System.out.print(mensaje);
+            }
+            numero = scanner.nextInt();
+            scanner.nextLine(); // Consumir el salto de línea pendiente
+            
+            if (numero < valorMinimo || numero > valorMaximo) {
+                System.out.println("El número debe estar entre " + valorMinimo + " y " + valorMaximo + ".");
+            }
+        } while (numero < valorMinimo || numero > valorMaximo);
+         
+        return numero;
+    }
+
+    /**
+     * Muestra un mensaje en la consola y espera a que el usuario ingrese un número entero dentro de un rango específico.
+     * @param mensaje El mensaje a mostrar.
+     * @param minimo El valor mínimo permitido (inclusive).
+     * @param maximo El valor máximo permitido (inclusive).
+     * @return Un número entero dentro del rango especificado.
+     */
+    public static int getNumero(String mensaje, int minimo, int maximo) {
+        int valor;
+        do {
+            System.out.print(mensaje);
+            while (!scanner.hasNextInt()) {
+                System.out.println("Por favor, ingrese un número entero válido.");
+                scanner.next(); // Limpiar el buffer
+                System.out.print(mensaje);
+            }
+            valor = scanner.nextInt();
+            scanner.nextLine(); // Consumir el salto de línea pendiente
+            
+            if (valor >= minimo && valor <= maximo) {
+                return valor;
+            }
+            System.out.print(":( ");
+        } while (true);
+    }
+
+    /**
+     * Muestra una barra de carga animada en la consola.
+     * @param tiempo El tiempo en milisegundos entre cada actualización de la barra (Normalmente   100 ms).
+     */
+    public static void loading(int tiempo) {
+        int total = 20;
+
+        for (int i = 1; i <= total; i++) {
+            System.out.print("\r");
+
+            StringBuilder barra = new StringBuilder("[");
+            for (int j = 1; j < i; j++) {
+                barra.append("=");
+            }
+
+        if (i < total) {
+            barra.append((i % 2 == 0) ? ">" : "-");
+            for (int j = i + 1; j <= total; j++) {
+                barra.append(" ");
+            }
+        } else {
+            barra.append("=");
+        }
+
+        barra.append("] ").append(i * 5).append("%");
+
+        System.out.print(barra);
+
+        try {
+            Thread.sleep(tiempo); // pausa de 200 ms
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt(); // restablecer el estado de interrupción
+            System.err.println("La animación fue interrumpida.");
+            break; // salir del bucle si fue interrumpido
+        }
+    }
+
+    System.out.println(); // salto de línea final
+}
+
+    /**
+     * Limpia la consola dependiendo del sistema operativo.
+     */
+    public static void clearScreen() {
+        try {
+            if (System.getProperty("os.name").contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+            }
+        } catch (IOException | InterruptedException ex) {
+            // Manejar excepciones si es necesario
+            System.err.println("Error al limpiar la consola: " + ex.getMessage());
+        }
+    }
+}
