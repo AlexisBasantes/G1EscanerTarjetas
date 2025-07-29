@@ -20,14 +20,14 @@ public class ControllerLector {
 
             switch (opcionMenuPrincipal) {
                 case 1:
-                    System.out.println("\nFunción 'Escanear QR' no implementada todavía.");
-                    
-                    Utility.ToolBox.getConsolaString("\nPresione Enter para continuar...");
-                    break;
+                    Utility.ToolBox.clearScreen();
+                    Utility.ToolBox.simulacionEscaneo("Estudiante");
                 
                 case 2:
                     // --- ESTE ES EL CAMBIO PRINCIPAL ---
                     // Ahora llama al método que primero verifica ID y contraseña.
+                    Utility.ToolBox.clearScreen();
+                    Utility.ToolBox.simulacionEscaneo("Administrador");
                     Administrador.autenticarYMostrarMenu();
                     break;
                 
