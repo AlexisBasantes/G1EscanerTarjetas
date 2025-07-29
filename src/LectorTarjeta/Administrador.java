@@ -70,9 +70,9 @@ public class Administrador extends Persona {
     public static void registrarEstudiante() {
 
         String nombre   = Utility.ToolBox.getConsolaString("Ingrese el nombre del estudiante: ");
+        String correo   = Utility.ToolBox.getConsolaString("Ingrese el correo del estudiante: ");
         String carrera  = Utility.ToolBox.getConsolaString("Ingrese la carrera del estudiante: ");
         String semestre = Utility.ToolBox.getConsolaString("Ingrese el semestre del estudiante: ");
-        String correo   = Utility.ToolBox.getConsolaString("Ingrese el correo del estudiante: ");
 
         GenerarID idGenerator = new GenerarID();
 
