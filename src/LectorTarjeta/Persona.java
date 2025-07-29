@@ -4,6 +4,11 @@ public class Persona{
     private String nombre;
     private String id;
 
+    /**
+     * Constructor de la clase Persona.
+     *
+     * @param nombre El nombre de la persona.
+     */
     public Persona(String nombre) {
         this.nombre = nombre;
         this.id = id;

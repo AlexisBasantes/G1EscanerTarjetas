@@ -1,27 +1,35 @@
 package LectorTarjeta;
 public class ControllerLector {
 
+    /**
+     * Método principal para iniciar el sistema de escaneo de tarjetas.
+     */
     public void start() {
 
-        int opcionMenuPrincipal =   0;
-        System.out.println("Iniciando sistema");
-        Utility.ToolBox.loading(100);
-        Utility.ToolBox.clearScreen();
+        boolean salir = true;
+        do {
+            int opcionMenuPrincipal =   0;
+            System.out.println("Iniciando sistema");
+            Utility.ToolBox.loading(100);
+            Utility.ToolBox.clearScreen();
 
-        System.out.print("\tMenu Principal\n1. Escanear QR\n2. Menu de administrador\n3. Salir\n");
-        opcionMenuPrincipal = Utility.ToolBox.getConsolaEnteroPositivo("Ingrese una opcion: ", 1, 3);
-        switch (opcionMenuPrincipal) {
-            case 1:
+            System.out.print("\tMenu Principal\n1. Escanear QR\n2. Menu de administrador\n3. Salir\n");
+            opcionMenuPrincipal = Utility.ToolBox.getConsolaEnteroPositivo("Ingrese una opcion: ", 1, 3);
+            switch (opcionMenuPrincipal) {
+                case 1:
                 
-                // escanearQR();
-                break;
-            case 2:
-                Administrador.menuAdministrador();
-                break;
-            case 3:
-                System.out.println("Saliendo del sistema...");  
-            default:
-                System.out.println("Opción no válida.");
-        }
+                    // escanearQR();
+                    break;
+                case 2:
+                    Administrador.menuAdministrador();
+                    break;
+                case 3:
+                    System.out.println("Saliendo del sistema...");  
+                    salir = false;
+                    break;
+                default:
+                    System.out.println("Opción no válida.");
+            }
+        } while (salir);
     }
 }

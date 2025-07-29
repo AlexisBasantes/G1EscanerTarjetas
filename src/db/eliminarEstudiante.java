@@ -5,9 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-/**
- * Clase para eliminar un estudiante de la base de datos por su ID.
- */
+
 public class EliminarEstudiante {
 
     /**

@@ -37,4 +37,16 @@ public class InsertarEstudiante {
             e.printStackTrace();
         }
     }
+
+    public static void main(String[] args) {
+        // Ejemplo de uso
+        String id = "1";
+        String nombre = "Juan Perez";
+        String correo = "juan.perez@example.com";
+        String carrera = "Ingenieria en Sistemas";
+        String semestre = "3";
+
+        InsertarEstudiante insertarEstudiante = new InsertarEstudiante();
+        insertarEstudiante.insertarEstudiante(id, nombre, correo, carrera, semestre);
+    }
 }
