@@ -13,10 +13,6 @@ import java.nio.file.Paths;
 
 public class GeneradorQR {
 
-    public static void main(String[] args) {
-        generarQR("1234", "karla.amores@epn.edu.ec", "Karla Amores");
-    }
-
     /**
      * Genera un código QR a partir de un ID y lo guarda en un archivo.
      *

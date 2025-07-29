@@ -8,9 +8,6 @@ import java.util.Properties;
 
 public class EnviarCorreoConQR {
 
-    public static void main(String[] args) {
-        enviarCorreoConQR("karla.amores@epn.edu.ec", "src/ImagenesQR"+ "/" + "QR_karla.amores.png", "Karla Amores");
-    }
     /**
      * Envía un correo electrónico con un archivo QR adjunto.
      *
