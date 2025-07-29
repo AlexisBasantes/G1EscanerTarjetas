@@ -1,35 +1,46 @@
 package LectorTarjeta;
+
 public class ControllerLector {
 
-    /**
-     * Método principal para iniciar el sistema de escaneo de tarjetas.
-     */
     public void start() {
+        int opcionMenuPrincipal;
 
-        boolean salir = true;
+        // Bucle para que el menú se repita hasta que el usuario elija salir.
         do {
-            int opcionMenuPrincipal =   0;
-            System.out.println("Iniciando sistema");
+            System.out.println("\nIniciando sistema");
             Utility.ToolBox.loading(100);
             Utility.ToolBox.clearScreen();
 
-            System.out.print("\tMenu Principal\n1. Escanear QR\n2. Menu de administrador\n3. Salir\n");
-            opcionMenuPrincipal = Utility.ToolBox.getConsolaEnteroPositivo("Ingrese una opcion: ", 1, 3);
+            System.out.print("\t--- Menú Principal ---\n"
+                    + "1. Escanear QR\n"
+                    + "2. Menú de administrador\n"
+                    + "3. Salir\n");
+            
+            opcionMenuPrincipal = Utility.ToolBox.getConsolaEnteroPositivo("Ingrese una opción: ", 1, 3);
+
             switch (opcionMenuPrincipal) {
                 case 1:
+                    System.out.println("\nFunción 'Escanear QR' no implementada todavía.");
+                    
+                    Utility.ToolBox.getConsolaString("\nPresione Enter para continuar...");
+                    break;
                 
-                    // escanearQR();
-                    break;
                 case 2:
-                    Administrador.menuAdministrador();
+                    // --- ESTE ES EL CAMBIO PRINCIPAL ---
+                    // Ahora llama al método que primero verifica ID y contraseña.
+                    Administrador.autenticarYMostrarMenu();
                     break;
+                
                 case 3:
-                    System.out.println("Saliendo del sistema...");  
-                    salir = false;
+                    System.out.println("\nSaliendo del sistema...");
                     break;
+                
                 default:
-                    System.out.println("Opción no válida.");
+                    
+                    System.out.println("\nOpción no válida.");
+                    break;
             }
-        } while (salir);
+
+        } while (opcionMenuPrincipal != 3); // El bucle continúa mientras la opción no sea 3.
     }
 }
