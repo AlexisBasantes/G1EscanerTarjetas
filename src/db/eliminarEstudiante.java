@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 
-public class EliminarEstudiante {
+public class eliminarEstudiante {
 
     /**
      * Elimina un estudiante de la base de datos por su ID.

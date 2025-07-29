@@ -1,6 +1,7 @@
 package LectorTarjeta;
 
 import LectorTarjeta.QR.GeneradorQR;
+import db.BuscarEstudiante;
 import db.GenerarID;
 import db.InsertarEstudiante;
 import java.sql.Connection;
@@ -8,7 +9,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import db.BuscarEstudiante;
 
 public class Administrador extends Persona {
 
@@ -41,13 +41,13 @@ public class Administrador extends Persona {
      */
     public static void menuAdministrador() {
         boolean salir = true;
-        
+
         do {
             Utility.ToolBox.loading(75);
             Utility.ToolBox.clearScreen();
             System.out.print("\tBienvenido al menú del Administrador\n1. Registrar estudiante\n2. Buscar estudiante\n3. Actualizar estudiante\n4. Eliminar estudiante\n5. Salir\n");
             int opcionAdmin = Utility.ToolBox.getConsolaEnteroPositivo("Ingrese una opcion: ", 1, 5);
-            
+
             switch (opcionAdmin) {
                 case 1:
                     registrarEstudiante();
@@ -59,7 +59,7 @@ public class Administrador extends Persona {
                     actualizarEstudiante();
                     break;
                 case 4:
-                    db.EliminarEstudiante.eliminarPorId(Utility.ToolBox.getConsolaString("Ingrese el ID del estudiante a eliminar: ")
+                    db.eliminarEstudiante.eliminarPorId(Utility.ToolBox.getConsolaString("Ingrese el ID del estudiante a eliminar: ")
                     );
                     break;
                 case 5:
@@ -69,7 +69,7 @@ public class Administrador extends Persona {
                 default:
                     System.out.println("Opción no válida. Intente de nuevo.");
             }
-            
+
         } while (salir);
     }
 
@@ -88,28 +88,28 @@ public class Administrador extends Persona {
 
             String correo   = Utility.ToolBox.getConsolaString("Ingrese el correo del estudiante: ");
             Utility.ToolBox.clearScreen();
-    
+
             GenerarID idGenerator = new GenerarID();
             String id = String.valueOf(idGenerator.generarIdUnico());
-    
+
             GeneradorQR.generarQR(id, correo, nombre);
-    
+
             InsertarEstudiante insertarEstudiante = new InsertarEstudiante();
             insertarEstudiante.insertarEstudiante(id, nombre, correo, carrera, semestre);
-    
+
             System.out.println("Nombre: "   + nombre);
             System.out.println("ID: "       + id);
             System.out.println("Carrera: "  + carrera);
             System.out.println("Semestre: " + semestre);
             System.out.println("Correo: "   + correo);
-    
-            
+
+
             System.out.println("\nEstudiante registrado correctamente. Volviendo al menú del administrador en 5 segundos...");
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
                e.printStackTrace();
-            }            
+            }
         } catch (Exception e) {
             System.out.println("Ocurrió un error al registrar el estudiante: " + e.getMessage());
         } finally {
@@ -126,7 +126,7 @@ public class Administrador extends Persona {
             Utility.ToolBox.clearScreen();
             System.out.print("\tBuscar Estudiante\n1. Buscar por ID\n2. Buscar por nombre\n3. Volver al menú principal\n");
             int opcionBusqueda = Utility.ToolBox.getConsolaEnteroPositivo("Ingrese una opción: ", 1, 3);
-            
+
             switch (opcionBusqueda) {
                 case 1:
                     String id = Utility.ToolBox.getConsolaString("Ingrese el ID del estudiante: ");
@@ -145,7 +145,7 @@ public class Administrador extends Persona {
             }
         } while (volver);
     }
-    
+
     /**
      * Método para actualizar los datos de un estudiante.
      */
