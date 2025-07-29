@@ -21,7 +21,7 @@ public class GestorAccesos {
     }
 
     public void mostrarAccesos() {
-        System.out.println("📋 Historial de accesos:");
+        System.out.println(" Historial de accesos:");
         for (RegistroAcceso acceso : accesos) {
             System.out.println(acceso);
         }
