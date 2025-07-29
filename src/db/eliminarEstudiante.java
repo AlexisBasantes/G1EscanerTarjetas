@@ -8,7 +8,7 @@ import java.sql.SQLException;
 /**
  * Clase para eliminar un estudiante de la base de datos por su ID.
  */
-public class eliminarEstudiante {
+public class EliminarEstudiante {
 
     /**
      * Elimina un estudiante de la base de datos por su ID.
