@@ -16,14 +16,22 @@ public class Administrador extends Persona {
     // --- CONSTANTES PARA LA AUTENTICACIÓN ---
    
     private static final String URL_DATABASE = "jdbc:sqlite:estudiantes.db"; 
-    private static final String CONTRASENA_ADMIN = "admin02";
 
     private String id;
     private String nombre;
     private String correo;
 
+    /**
+     * Constructor de la clase Administrador.
+     *
+     * @param id El ID del administrador.
+     * @param nombre El nombre del administrador.
+     * @param carrera La carrera del administrador (opcional).
+     * @param nivel El nivel del administrador (opcional).
+     * @param correo El correo electrónico del administrador.
+     */
     public Administrador(String id, String nombre, String carrera, String nivel, String correo) {
-        super(nombre); 
+        super(nombre, correo); 
         this.id = id;
         this.nombre = nombre;
         this.correo = correo;
@@ -39,49 +47,28 @@ public class Administrador extends Persona {
     public void setNombre(String nombre) { this.nombre = nombre; }
     public void setcorreo(String correo) { this.correo = correo; }
 
-    // --- NUEVO MÉTODO DE ENTRADA (PUNTO DE ACCESO) ---
     /**
-     * Pide credenciales (ID y contraseña) y si son correctas, muestra el menú de administrador.
-   
+     * Método para autenticar al administrador y mostrar el menú.
+     * Verifica si el usuario tiene permisos de administrador en la base de datos.
      */
     public static void autenticarYMostrarMenu() {
-        System.out.println(); // Salto de línea para claridad
+        System.out.println();
 
         Utility.ToolBox.clearScreen();
 
-        Utility.ToolBox.loading(100);
-
         Utility.ToolBox.clearScreen();
+        System.out.println("\nEl usuario tiene permisos de administrador.\n");
 
-        String idIngresado = Utility.ToolBox.getConsolaString("Por favor, ingrese su ID de usuario: ");
+        String contrasenaIngresada = Utility.ToolBox.getConsolaString("Ingrese la contraseña de administrador: ");
 
-        // 1. Comprueba si el usuario tiene permisos de administrador en la BD
-        if (esUsuarioAdmin(idIngresado)) {
-
-            Utility.ToolBox.clearScreen();
-
-            System.out.println("\n✅ El usuario tiene permisos de administrador.");
-
-            Utility.ToolBox.loading(100);
-
-            Utility.ToolBox.clearScreen();
-
-            // 2. Pide la contraseña universal
-            String contrasenaIngresada = Utility.ToolBox.getConsolaString("Ingrese la contraseña de administrador: ");
-
-            // 3. Valida la contraseña
-            if (contrasenaIngresada.equals(CONTRASENA_ADMIN)) {
-                // Si todo es correcto, llama al menú original del administrador
-                menuAdministrador();
-            } else {
-                System.out.println("\n❌ Contraseña incorrecta.");
-                Utility.ToolBox.getConsolaString("\nPresione Enter para continuar...");
-            }
+        if (contrasenaIngresada.equals("admin02")) {
+            menuAdministrador();
         } else {
-            // Mensaje si el usuario no es admin o no existe en la BD
-            System.out.println("\n❌ El usuario no posee permisos de administrador.");
+            System.out.println("\nContraseña incorrecta.");
             Utility.ToolBox.getConsolaString("\nPresione Enter para continuar...");
         }
+            Utility.ToolBox.getConsolaString("\nPresione Enter para continuar...");
+        
     }
 
     /**
@@ -112,14 +99,11 @@ public class Administrador extends Persona {
         return false;
     }
 
-    
-    
     /**
      * Menú principal del administrador.
      */
     public static void menuAdministrador() {
-        boolean salir = false;
-
+        int salida = 0;
         do {
             Utility.ToolBox.loading(75);
             Utility.ToolBox.clearScreen();
@@ -131,6 +115,7 @@ public class Administrador extends Persona {
                     + "5. Salir\n");
 
             int opcionAdmin = Utility.ToolBox.getConsolaEnteroPositivo("Ingrese una opcion: ", 1, 5);
+            salida = opcionAdmin;
 
             switch (opcionAdmin) {
                 case 1:
@@ -146,7 +131,6 @@ public class Administrador extends Persona {
                     eliminarEstudiante();
                     break;
                 case 5:
-                    salir = true;
                     System.out.println("Saliendo del menú del Administrador...");
                     break;
                 default:
@@ -154,13 +138,17 @@ public class Administrador extends Persona {
             }
 
             // Pide presionar Enter solo si no se ha elegido la opción de salir
-            if (!salir) {
-                Utility.ToolBox.getConsolaString("\nPresione Enter para continuar...");
+            if (opcionAdmin != 5) {
+                Utility.ToolBox.getConsolaString("\nPresione 1 para continuar...");
             }
 
-        } while (!salir);
+        } while (salida != 5);
     }
 
+    /**
+     * Método para registrar un nuevo estudiante.
+     * Solicita los datos del estudiante y genera un código QR.
+     */
     public static void registrarEstudiante() {
         try {
             String nombre   = Utility.ToolBox.getConsolaString("Ingrese el nombre del estudiante: ");
@@ -188,6 +176,10 @@ public class Administrador extends Persona {
         }
     }
 
+    /**
+     * Método para buscar estudiantes por ID o nombre.
+     * Muestra un menú para elegir el tipo de búsqueda.
+     */
     public static void buscarEstudiante() {
         boolean volver = false;
 
@@ -219,6 +211,10 @@ public class Administrador extends Persona {
         } while (!volver);
     }
 
+    /**
+     * Método para actualizar los datos de un estudiante.
+     * Solicita el ID del estudiante y los nuevos datos a actualizar.
+     */
     public static void actualizarEstudiante() {
         String id = Utility.ToolBox.getConsolaString("Ingrese el ID del estudiante a actualizar: ");
 
@@ -259,6 +255,10 @@ public class Administrador extends Persona {
         }
     }
 
+    /**
+     * Método para eliminar un estudiante.
+     * Solicita el ID del estudiante a eliminar y confirma la acción.
+     */
     public static void eliminarEstudiante() {
         String id = Utility.ToolBox.getConsolaString("Ingrese el ID del estudiante a eliminar: ");
 

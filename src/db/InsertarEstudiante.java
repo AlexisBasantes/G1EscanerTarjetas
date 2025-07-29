@@ -18,7 +18,6 @@ public class InsertarEstudiante {
     public void insertarEstudiante(String id, String nombre, String correo, String carrera, String semestre) {
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:estudiantes.db")) {
 
-            // Se insertan las columnas (Admin se asigna por defecto)
             String sql = "INSERT INTO estudiantes (ID, Nombre, Correo, Carrera, Semestre, Admin) VALUES (?, ?, ?, ?, ?, ?)";
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -40,10 +39,10 @@ public class InsertarEstudiante {
 
     public static void main(String[] args) {
         // Ejemplo de uso
-        String id = "1";
-        String nombre = "Juan Perez";
-        String correo = "juan.perez@example.com";
-        String carrera = "Ingenieria en Sistemas";
+        String id = "1234";
+        String nombre = "Juan Alberto Perez Gomez";
+        String correo = "juan.gomez@example.com";
+        String carrera = "Ambiental";
         String semestre = "3";
 
         InsertarEstudiante insertarEstudiante = new InsertarEstudiante();

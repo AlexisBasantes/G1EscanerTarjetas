@@ -2,7 +2,6 @@ package LectorTarjeta.QR;
 
 import jakarta.mail.*;
 import jakarta.mail.internet.*;
-import jakarta.activation.*;
 import java.io.File;
 import java.util.Properties;
 

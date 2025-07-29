@@ -11,7 +11,7 @@ public class Estudiante extends Persona {
      * Contructor de la clase Estudiante.
      */
     public Estudiante(String id, String nombre, String carrera, String semestre, String correo) {
-        super(nombre);
+        super(nombre, correo);
         this.id         = id;
         this.nombre     = nombre;
         this.carrera    = carrera;

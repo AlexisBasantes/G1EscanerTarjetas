@@ -8,8 +8,9 @@ public class Persona{
      * Constructor de la clase Persona.
      *
      * @param nombre El nombre de la persona.
+     * @param id 
      */
-    public Persona(String nombre) {
+    public Persona(String nombre, String id) {
         this.nombre = nombre;
         this.id = id;
     }

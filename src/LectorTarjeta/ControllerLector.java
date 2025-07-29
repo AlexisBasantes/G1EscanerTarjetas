@@ -2,15 +2,18 @@ package LectorTarjeta;
 
 public class ControllerLector {
 
+    /**
+     * Método principal que inicia el sistema y muestra el menú.
+     * Permite al usuario escanear un código QR o acceder al menú de administrador.
+     */
     public void start() {
         int opcionMenuPrincipal;
 
-        // Bucle para que el menú se repita hasta que el usuario elija salir.
+        System.out.println("\nIniciando sistema");
+            Utility.ToolBox.loading(50);
         do {
-            System.out.println("\nIniciando sistema");
-            Utility.ToolBox.loading(100);
-            Utility.ToolBox.clearScreen();
 
+            Utility.ToolBox.clearScreen();
             System.out.print("\t--- Menú Principal ---\n"
                     + "1. Escanear QR\n"
                     + "2. Menú de administrador\n"
@@ -22,11 +25,9 @@ public class ControllerLector {
                 case 1:
                     Utility.ToolBox.clearScreen();
                     Utility.ToolBox.simulacionEscaneo("Estudiante");
-                
+                    db.RegistroAcceso.registrarAcceso(8325);
+                    break;
                 case 2:
-                    // --- ESTE ES EL CAMBIO PRINCIPAL ---
-                    // Ahora llama al método que primero verifica ID y contraseña.
-                    Utility.ToolBox.clearScreen();
                     Utility.ToolBox.simulacionEscaneo("Administrador");
                     Administrador.autenticarYMostrarMenu();
                     break;
@@ -41,6 +42,6 @@ public class ControllerLector {
                     break;
             }
 
-        } while (opcionMenuPrincipal != 3); // El bucle continúa mientras la opción no sea 3.
+        } while (opcionMenuPrincipal != 3);
     }
 }

@@ -131,4 +131,57 @@ public class ToolBox {
             System.err.println("Error al limpiar la consola: " + ex.getMessage());
         }
     }
+
+    /**
+     * Muestra un spinner animado en la consola.
+     * @param tiempo El tiempo en milisegundos entre cada actualización del spinner.
+     */
+    public static void spinner (int tiempo) {
+        String[] spinner = {"|", "/", "-", "\\"};
+        int index = 0;
+
+        while (true) {
+            System.out.print("\r" + spinner[index]);
+            index = (index + 1) % spinner.length;
+
+            try {
+                Thread.sleep(tiempo);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt(); // restablecer el estado de interrupción
+                System.err.println("La animación fue interrumpida.");
+                break; // salir del bucle si fue interrumpido
+            }
+        }
+    }
+    
+    /**
+     * Simula el escaneo de un codigo QR de estudiante o administrador.
+     * @param tipoUsuario El tipo de usuario ("Estudiante" o "Administrador").
+     */
+    public static void simulacionEscaneo(String tipoUsuario){
+        if (tipoUsuario.equals("Estudiante")) {
+            System.out.println("Escaneando QR del estudiante...");
+            try {
+                loading(100);
+                System.out.println("Bienvenido, nombreEstudiante! Escaneo exitoso.");
+                Thread.sleep(5000); 
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                System.err.println("La simulación fue interrumpida.");
+            }
+        } else if (tipoUsuario.equals("Administrador")) {
+            System.out.println("Escaneando QR del administrador...");
+            try {
+                loading(100);
+                System.out.println("Bienvenido, nombreAdministrador! Escaneo exitoso.");
+                Thread.sleep(3000); 
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                System.err.println("La simulación fue interrumpida.");
+            }
+        } else {
+            System.out.println("Tipo de usuario no reconocido.");
+            return;
+        }
+    }
 }
