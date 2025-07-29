@@ -36,6 +36,6 @@ public class RegistroAcceso {
 
     @Override
     public String toString() {
-        return "👤 Estudiante: " + estudiante + " | 📅 FechaHora: " + FORMATTER.format(fechaHora);
+        return "👤 Estudiante: " + estudiante + " |  FechaHora: " + FORMATTER.format(fechaHora);
     }
 }
